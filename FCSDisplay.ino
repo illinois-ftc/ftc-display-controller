@@ -238,7 +238,6 @@ void updateDigit(Adafruit_7segment& out, int id, char c) {
     out.writeDigitRaw(id, 0x5E);
   }
   else {
-    Serial.println(c);
     out.writeDigitRaw(id, 0x00);
   }
 }
