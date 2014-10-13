@@ -1,4 +1,5 @@
 #include <Wire.h>
+#include <avr/wdt.h>
 
 #include "Adafruit_LEDBackpack.h"
 #include "Adafruit_GFX.h"
@@ -39,6 +40,8 @@ String currCmd = String("");
 int led = 13;
 
 void setup() {
+  wdt_enable(WDTO_2S);
+  
   // initialize serial:
   Serial.begin(9600);
 
@@ -62,9 +65,10 @@ void setup() {
 }
 
 void loop() {
+  wdt_reset();
   // if there's any serial available, read it:
   while (Serial.available() > 0) {
-
+    wdt_reset();
     // look for the next valid integer in the incoming serial stream:
     char cmd = Serial.read();
     if(cmd == ';'){
@@ -147,7 +151,7 @@ void loop() {
         Serial.println(ACK);
       }
       else if(currCmd.startsWith(RSET)){
-        asm volatile ("  jmp 0");
+        delay(10000);
       }
       else if(currCmd.startsWith(DBG)){
         Serial.print(disp[0]);
