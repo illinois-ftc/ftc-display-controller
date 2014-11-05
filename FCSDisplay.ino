@@ -31,7 +31,7 @@ String disp[4];
 boolean colon[4] = {
   false, false, false, false};
 
-int brightness = 0;
+int brightness = 15;
 
 boolean disabled = false;
 
@@ -40,7 +40,7 @@ String currCmd = String("");
 int led = 13;
 
 void setup() {
-  wdt_enable(WDTO_2S);
+  wdt_enable(WDTO_1S);
   
   // initialize serial:
   Serial.begin(9600);
@@ -65,10 +65,8 @@ void setup() {
 }
 
 void loop() {
-  wdt_reset();
   // if there's any serial available, read it:
   while (Serial.available() > 0) {
-    wdt_reset();
     // look for the next valid integer in the incoming serial stream:
     char cmd = Serial.read();
     if(cmd == ';'){
@@ -184,7 +182,7 @@ void loop() {
     else {
       digitalWrite(led, LOW); 
     }
-
+    if(!disabled){
     //updateBrightness
     disp1.setBrightness(brightness);
     disp2.setBrightness(brightness);
@@ -220,6 +218,39 @@ void loop() {
     updateDigit(disp4,1,disp[3].charAt(1));
     updateDigit(disp4,3,disp[3].charAt(2));
     updateDigit(disp4,4,disp[3].charAt(3));
+    }
+    else
+    {
+      //updateColon
+    disp1.drawColon(false);
+    disp2.drawColon(false);
+    disp3.drawColon(false);
+    disp4.drawColon(false);
+
+    //updateDisp1
+    updateDigit(disp1,0,0);
+    updateDigit(disp1,1,0);
+    updateDigit(disp1,3,0);
+    updateDigit(disp1,4,0);
+
+    //updateDisp2
+    updateDigit(disp2,0,0);
+    updateDigit(disp2,1,0);
+    updateDigit(disp2,3,0);
+    updateDigit(disp2,4,0);
+
+    //updateDisp3
+    updateDigit(disp3,0,0);
+    updateDigit(disp3,1,0);
+    updateDigit(disp3,3,0);
+    updateDigit(disp3,4,0);
+
+    //updateDisp4
+    updateDigit(disp3,0,0);
+    updateDigit(disp3,1,0);
+    updateDigit(disp3,3,0);
+    updateDigit(disp3,4,0);
+    }
 
     //writeDisplay
     disp1.writeDisplay();
