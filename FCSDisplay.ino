@@ -74,99 +74,101 @@ void loop() {
       currCmd.trim();
       if(currCmd.startsWith(PING)){
         Serial.println("ardFCSv1;");
-      }
-      else if(currCmd.startsWith(BRT)){
-        brightness = currCmd.substring(BRT.length()).toInt();
-        Serial.println(ACK);
-        disp1.setBrightness(brightness);
-        disp2.setBrightness(brightness);
-        disp3.setBrightness(brightness);
-        disp4.setBrightness(brightness);
-      }
-      else if(currCmd.startsWith(COLN_ALL)){
-        colon[0] = currCmd.substring(COLN_ALL.length()).toInt();
-        colon[1] = currCmd.substring(COLN_ALL.length()).toInt();
-        colon[2] = currCmd.substring(COLN_ALL.length()).toInt();
-        colon[3] = currCmd.substring(COLN_ALL.length()).toInt();
-        Serial.println(ACK);
-      }
-      else if(currCmd.startsWith(COLN_ONE)){
-        int id = currCmd.substring(WRTE_ALL.length()).toInt();
-        colon[id-1] = currCmd.substring(currCmd.lastIndexOf(',')+1).toInt();    
-        Serial.println(ACK);
-      }
-      else if(currCmd.startsWith(COLN_SEQ)){
-        int pos1 = COLN_SEQ.length();
-        int pos2 = currCmd.indexOf(',');
-        for(int i = 0; i < 4; i++){
-          colon[i] = currCmd.substring(pos1,pos2).toInt(); 
-          pos1 = pos2+1;
-          pos2 = currCmd.substring(pos1).indexOf(',')+pos1;
-          if(pos2<pos1){
-            pos2 = currCmd.lastIndexOf(';');
-          }
+      } else {
+        wdt_reset();
+        if(currCmd.startsWith(BRT)){
+          brightness = currCmd.substring(BRT.length()).toInt();
+          Serial.println(ACK);
+          disp1.setBrightness(brightness);
+          disp2.setBrightness(brightness);
+          disp3.setBrightness(brightness);
+          disp4.setBrightness(brightness);
         }
-        Serial.println(ACK);
-      }
-      else if(currCmd.startsWith(WRTE_ALL)){
-        disp[0] = currCmd.substring(WRTE_ALL.length(),currCmd.lastIndexOf(';'));
-        disp[1] = currCmd.substring(WRTE_ALL.length(),currCmd.lastIndexOf(';'));
-        disp[2] = currCmd.substring(WRTE_ALL.length(),currCmd.lastIndexOf(';'));
-        disp[3] = currCmd.substring(WRTE_ALL.length(),currCmd.lastIndexOf(';'));        
-        Serial.println(ACK);
-      }
-      else if(currCmd.startsWith(WRTE_ONE)){
-        int id = currCmd.substring(WRTE_ALL.length()).toInt();
-        disp[id-1] = currCmd.substring(currCmd.lastIndexOf(',')+1,currCmd.lastIndexOf(';'));    
-        Serial.println(ACK);
-      }
-      else if(currCmd.startsWith(WRTE_SEQ)){
-        int pos1 = WRTE_SEQ.length();
-        int pos2 = currCmd.indexOf(',');
-        for(int i = 0; i < 4; i++){
-          disp[i] = currCmd.substring(pos1,pos2); 
-          pos1 = pos2+1;
-          pos2 = currCmd.substring(pos1).indexOf(',')+pos1;
-          if(pos2<pos1){
-            pos2 = currCmd.lastIndexOf(';');
-          }
+        else if(currCmd.startsWith(COLN_ALL)){
+          colon[0] = currCmd.substring(COLN_ALL.length()).toInt();
+          colon[1] = currCmd.substring(COLN_ALL.length()).toInt();
+          colon[2] = currCmd.substring(COLN_ALL.length()).toInt();
+          colon[3] = currCmd.substring(COLN_ALL.length()).toInt();
+          Serial.println(ACK);
         }
-        Serial.println(ACK);
-      }
-      else if(currCmd.startsWith(DSBL)){
-        disabled = true;
-        Serial.println(ACK);
-      }
-      else if(currCmd.startsWith(ENBL)){
-        disabled = false;
-        Serial.println(ACK);
-      }
-      else if(currCmd.startsWith(INIT)){
-        disp[0] = " d1 ";
-        disp[1] = " d2 ";
-        disp[2] = " d3 ";
-        disp[3] = " d4 ";
-        Serial.println(ACK);
-      }
-      else if(currCmd.startsWith(RSET)){
-        delay(10000);
-      }
-      else if(currCmd.startsWith(DBG)){
-        Serial.print(disp[0]);
-        Serial.print('|');
-        Serial.print(disp[1]);
-        Serial.print('|');
-        Serial.print(disp[2]);
-        Serial.print('|');
-        Serial.println(disp[3]);
-        Serial.print(colon[0]?"t":"f");
-        Serial.print('|');
-        Serial.print(colon[1]?"t":"f");
-        Serial.print('|');
-        Serial.print(colon[2]?"t":"f");
-        Serial.print('|');
-        Serial.println(colon[3]?"t":"f");
-        Serial.println(brightness);
+        else if(currCmd.startsWith(COLN_ONE)){
+          int id = currCmd.substring(WRTE_ALL.length()).toInt();
+          colon[id-1] = currCmd.substring(currCmd.lastIndexOf(',')+1).toInt();    
+          Serial.println(ACK);
+        }
+        else if(currCmd.startsWith(COLN_SEQ)){
+          int pos1 = COLN_SEQ.length();
+          int pos2 = currCmd.indexOf(',');
+          for(int i = 0; i < 4; i++){
+            colon[i] = currCmd.substring(pos1,pos2).toInt(); 
+            pos1 = pos2+1;
+            pos2 = currCmd.substring(pos1).indexOf(',')+pos1;
+            if(pos2<pos1){
+              pos2 = currCmd.lastIndexOf(';');
+            }
+          }
+          Serial.println(ACK);
+        }
+        else if(currCmd.startsWith(WRTE_ALL)){
+          disp[0] = currCmd.substring(WRTE_ALL.length(),currCmd.lastIndexOf(';'));
+          disp[1] = currCmd.substring(WRTE_ALL.length(),currCmd.lastIndexOf(';'));
+          disp[2] = currCmd.substring(WRTE_ALL.length(),currCmd.lastIndexOf(';'));
+          disp[3] = currCmd.substring(WRTE_ALL.length(),currCmd.lastIndexOf(';'));        
+          Serial.println(ACK);
+        }
+        else if(currCmd.startsWith(WRTE_ONE)){
+          int id = currCmd.substring(WRTE_ALL.length()).toInt();
+          disp[id-1] = currCmd.substring(currCmd.lastIndexOf(',')+1,currCmd.lastIndexOf(';'));    
+          Serial.println(ACK);
+        }
+        else if(currCmd.startsWith(WRTE_SEQ)){
+          int pos1 = WRTE_SEQ.length();
+          int pos2 = currCmd.indexOf(',');
+          for(int i = 0; i < 4; i++){
+            disp[i] = currCmd.substring(pos1,pos2); 
+            pos1 = pos2+1;
+            pos2 = currCmd.substring(pos1).indexOf(',')+pos1;
+            if(pos2<pos1){
+              pos2 = currCmd.lastIndexOf(';');
+            }
+          }
+          Serial.println(ACK);
+        }
+        else if(currCmd.startsWith(DSBL)){
+          disabled = true;
+          Serial.println(ACK);
+        }
+        else if(currCmd.startsWith(ENBL)){
+          disabled = false;
+          Serial.println(ACK);
+        }
+        else if(currCmd.startsWith(INIT)){
+          disp[0] = " d1 ";
+          disp[1] = " d2 ";
+          disp[2] = " d3 ";
+          disp[3] = " d4 ";
+          Serial.println(ACK);
+        }
+        else if(currCmd.startsWith(RSET)){
+          delay(10000);
+        }
+        else if(currCmd.startsWith(DBG)){
+          Serial.print(disp[0]);
+          Serial.print('|');
+          Serial.print(disp[1]);
+          Serial.print('|');
+          Serial.print(disp[2]);
+          Serial.print('|');
+          Serial.println(disp[3]);
+          Serial.print(colon[0]?"t":"f");
+          Serial.print('|');
+          Serial.print(colon[1]?"t":"f");
+          Serial.print('|');
+          Serial.print(colon[2]?"t":"f");
+          Serial.print('|');
+          Serial.println(colon[3]?"t":"f");
+          Serial.println(brightness);
+        }
       }
       currCmd = String();
     } 
