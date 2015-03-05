@@ -10,7 +10,9 @@ Adafruit_7segment disp3 = Adafruit_7segment();
 Adafruit_7segment disp4 = Adafruit_7segment();
 
 const String PING = String('p'); //implemented
-const String RSET = String('r');
+const String RSET = String('r'); //implemented
+const String ENWDT = String("we"); //implemented
+const String DISWDT = String("wd"); //implemented
 const String INIT = String('i'); //implemented
 const String DSBL = String('d'); //implemented
 const String ENBL = String('e'); //implemented
@@ -74,6 +76,12 @@ void loop() {
       currCmd.trim();
       if(currCmd.startsWith(PING)){
         Serial.println("ardFCSv1;");
+      } else if(currCmd.startsWith(ENWDT)){
+        wdt_enable(WDTO_1S);
+        Serial.println(ACK);
+      } else if(currCmd.startsWith(DISWDT)){
+        wdt_disable();
+        Serial.println(ACK);
       } else {
         wdt_reset();
         if(currCmd.startsWith(BRT)){
@@ -150,6 +158,7 @@ void loop() {
           Serial.println(ACK);
         }
         else if(currCmd.startsWith(RSET)){
+          wdt_enable(WDTO_1S);
           delay(10000);
         }
         else if(currCmd.startsWith(DBG)){
